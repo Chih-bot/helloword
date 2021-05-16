@@ -1,11 +1,33 @@
 #include "binarysearchtree.h"
 #include<cmath>
+#include<stack>
 using namespace std;
 template<class T>
 binarysearchtree<T>::binarysearchtree(){
     root=NULL;
     nodenum=1;
-    height=0;
+   
+}
+template<class T>
+binarysearchtree<T>::~binarysearchtree(){
+stack<leaf<T>*> s=stack<leaf<T>*>();
+leaf<T>* Node=root;
+leaf<T> *l=NULL;
+    while(Node||!s.empty()){
+        while(Node){
+        s.push(Node);
+        Node=Node->left;
+        }
+        if(!s.empty()){
+            Node=s.top();
+            s.pop();
+            l=Node;
+            Node=Node->right;
+            delete l;
+        }
+
+    }
+
 }
 /*先从根结点的值比较。根据二叉搜索树的性质，
 插入结点比当前结点小的往左子树插入,大的往右子
@@ -32,7 +54,7 @@ void binarysearchtree<T>::insert(const T& key){
     else
     y->right=node;
     nodenum++;
-    height=(int)log2(nodenum);
+
     
 
 }
@@ -145,7 +167,7 @@ void binarysearchtree<T>::delnode(const T& key){
     }
     delete node;
     nodenum--;
-    int height=(int)log2(nodenum);
+    
     
 }
 /*
@@ -159,6 +181,24 @@ void binarysearchtree<T>::inorder_tree_walk(leaf<T> *node)const{
         inorder_tree_walk(node->right);
     }
 }
+template<class T>
+void binarysearchtree<T>::inorder_tree_walk_stack()const{
+    stack<leaf<T>*> s=stack<leaf<T>*>();
+    leaf<T>* Node=root;
+    while(Node||!s.empty()){
+        while(Node){
+        s.push(Node);
+        Node=Node->left;
+        }
+        if(!s.empty()){
+            Node=s.top();
+            s.pop();
+            cout<<Node->key<<"\t";
+            Node=Node->right;
+        }
+
+    }
+}
 
 int main(){
     binarysearchtree<int> t=binarysearchtree<int>();
@@ -170,7 +210,7 @@ int main(){
     t.insert(2);
     t.insert(7);
     t.delnode(6);
-    t.inorder_tree_walk(t.getroot());
+    t.inorder_tree_walk_stack();
    
 }
 
